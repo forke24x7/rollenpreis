@@ -1,0 +1,16 @@
+services:
+  rollenpreis:
+    container_name: rollenpreis
+    image: rollenpreis:latest
+    build:
+      context: https://github.com/forke24x7/rollenpreis.git#main
+    pull_policy: build
+    restart: unless-stopped
+    init: true
+    ports:
+      - "${ROLLENPREIS_PORT:-8841}:8080"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true

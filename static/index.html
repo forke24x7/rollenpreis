@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f6f7f9">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Rollenpreis">
+<title>Rollenpreis</title>
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="stylesheet" href="./style.css">
+<script src="./version.js"></script>
+<script src="./theme.js"></script>
+<script src="./calculator.js" defer></script>
+<script src="./app.js" defer></script>
+</head>
+<body>
+<div class="shell">
+<header><a class="brand" href="./" aria-label="Rollenpreis Startseite"><span class="brand-icon" aria-hidden="true">▤</span>Rollenpreis<span class="brand-dot">.</span></a><div class="themes" role="group" aria-label="Darstellung"><button data-theme-choice="light" aria-label="Hell" title="Hell">☀</button><button data-theme-choice="dark" aria-label="Dunkel" title="Dunkel">☾</button><button data-theme-choice="system" aria-label="System" title="System">◐</button></div></header>
+<main>
+<div class="page-heading"><div><h1>Preise vergleichen.</h1></div><span class="local-badge"><i></i> Auf deinem Gerät</span></div>
+<div class="category-switch" role="group" aria-label="Papierart"><button data-category="toilet" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="9" cy="7" rx="5" ry="4"/><path d="M4 7v10c0 2.2 2.2 4 5 4h10V7c0-2.2-2.2-4-5-4H9M14 7v14M17 12h2m-2 4h2"/><ellipse cx="9" cy="7" rx="1.2" ry="1"/></svg>Klorollen</button><button data-category="kitchen" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="10" cy="5" rx="5" ry="2"/><path d="M5 5v14c0 1.1 2.2 2 5 2s5-.9 5-2V5m0 4 5 3v9h-10M8 10h1m2 3h1m-4 3h1"/></svg>Küchenrollen</button></div>
+<section id="summary" class="summary" aria-live="polite" aria-atomic="true"></section>
+<div class="section-heading"><h2>Deine Angebote <span id="offer-count">2</span></h2><button id="reset" class="text-button">Zurücksetzen</button></div>
+<div id="offers" class="offers"></div>
+<button id="add" class="add-button"><span aria-hidden="true">＋</span> Angebot hinzufügen</button>
+<p id="storage-message" class="storage-message" role="status" hidden></p>
+<p class="comparison-note">Vergleich nach Blattanzahl. Lagen und Blattgröße sind nicht berücksichtigt.</p>
+</main>
+<footer><span>Rollenpreis <span id="version"></span></span><span id="offline-status">Lokal gespeichert</span></footer>
+</div>
+<dialog id="reset-dialog"><form method="dialog"><h2>Angebote zurücksetzen?</h2><p id="reset-message"></p><div class="dialog-actions"><button value="cancel" class="secondary">Abbrechen</button><button value="reset" class="danger">Zurücksetzen</button></div></form></dialog>
+</body>
+</html>
