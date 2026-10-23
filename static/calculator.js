@@ -1,5 +1,12 @@
 /* Integer cents avoid rounding errors when comparing package prices. */
 self.RollCalculator = {
+  references: {
+    toilet: { name: 'REWE ja!', rolls: '10', sheets: '220', price: '3,75' },
+    kitchen: { name: 'Zewa', rolls: '4', sheets: '74', price: '2,75' }
+  },
+  percentDifference(perSheet, referencePerSheet) {
+    return this.isEqual(perSheet, referencePerSheet) ? 0 : (perSheet / referencePerSheet - 1) * 100;
+  },
   parse(value, kind) {
     const text = String(value).trim();
     if (kind === 'price') {

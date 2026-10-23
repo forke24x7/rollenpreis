@@ -31,3 +31,16 @@ test('Gleiche Blattpreise werden auch bei doppelter Packung als gleich erkannt',
   assert.ok(calc.isEqual(a.perSheet, b.perSheet));
   assert.equal(calc.isEqual(a.perSheet, 99 / 400), false);
 });
+
+test('Referenzen nutzen die angegebenen Normalpreise pro Blatt', () => {
+  assert.equal(calc.calculate(calc.references.toilet).perSheet, 375 / 2200);
+  assert.equal(calc.calculate(calc.references.kitchen).perSheet, 275 / 296);
+});
+test('Referenzvergleich erkennt günstigere, teurere und gleiche Blattpreise', () => {
+  const reference = calc.calculate(calc.references.toilet).perSheet;
+  assert.ok(Math.abs(calc.percentDifference(reference / 2, reference) + 50) < 1e-10);
+  assert.ok(Math.abs(calc.percentDifference(reference * 1.2, reference) - 20) < 1e-10);
+  assert.equal(calc.percentDifference(750 / 4400, reference), 0);
+  const kitchen = calc.calculate(calc.references.kitchen).perSheet;
+  assert.ok(calc.percentDifference(reference, kitchen) < -80);
+});

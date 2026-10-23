@@ -23,6 +23,11 @@
   }
   function title(index) { return state[state.category][index].name.trim() || `Angebot ${index + 1}`; }
   function update() {
+    const reference = calc.references[state.category];
+    const referenceResult = calc.calculate(reference);
+    $('#reference-name').textContent = reference.name;
+    $('#reference-pack').textContent = `${reference.rolls} Rollen × ${reference.sheets} Blatt · ${reference.price} €`;
+    $('#reference-price').textContent = `${number(referenceResult.perSheet)} ct`;
     const offers = state[state.category];
     const results = offers.map(offer => calc.calculate(offer));
     const valid = results.filter(Boolean);
@@ -50,6 +55,12 @@
       card.querySelector('.result-detail').textContent = result ? `${number(result.perSheet)} € / 100 Blatt · ${integer(result.total)} Blatt gesamt` : 'pro Blatt';
       const difference = card.querySelector('.difference');
       difference.textContent = result && valid.length >= 2 ? winner ? '✓ Günstigster Blattpreis' : `+${number((result.perSheet / best - 1) * 100, 1)} % zum Bestpreis` : '';
+      const referenceDifference = card.querySelector('.reference-difference');
+      const percent = result ? calc.percentDifference(result.perSheet, referenceResult.perSheet) : null;
+      referenceDifference.hidden = percent === null;
+      referenceDifference.classList.toggle('cheaper', percent !== null && percent < 0);
+      referenceDifference.classList.toggle('dearer', percent !== null && percent > 0);
+      referenceDifference.textContent = percent === null ? '' : percent === 0 ? `Gleicher Blattpreis wie ${reference.name}` : `${Math.abs(percent) < 0.05 ? 'Weniger als 0,1' : number(Math.abs(percent), 1)} % ${percent < 0 ? 'günstiger' : 'teurer'} als ${reference.name}`;
       card.querySelectorAll('[data-field]').forEach(input => {
         const invalid = input.dataset.field !== 'name' && input.value.trim() !== '' && calc.parse(input.value, input.dataset.field === 'price' ? 'price' : 'count') === null;
         input.setAttribute('aria-invalid', String(invalid));
@@ -65,7 +76,7 @@
     $('#offers').replaceChildren();
     state[state.category].forEach((offer, index) => {
       const card = document.createElement('article'); card.className = 'offer'; card.setAttribute('aria-label', `Angebot ${index + 1}`);
-      card.innerHTML = `<div class="offer-top"><span class="offer-badge"></span><button class="remove" aria-label="Angebot ${index + 1} entfernen" title="Angebot entfernen">×</button></div><label class="name-field">Name <span>(optional)</span><input class="offer-name" data-field="name" maxlength="80" aria-label="Name für Angebot ${index + 1} (optional)" placeholder="Angebot ${index + 1}"></label><div class="fields"><label>Rollen<input data-field="rolls" inputmode="numeric" type="text" maxlength="7" autocomplete="off" placeholder="z. B. 8"></label><span class="multiply" aria-hidden="true">×</span><label>Blatt je Rolle<input data-field="sheets" inputmode="numeric" type="text" maxlength="7" autocomplete="off" placeholder="z. B. 200"></label><label class="price-field">Packungspreis<div class="price-input"><input data-field="price" inputmode="decimal" type="text" maxlength="12" autocomplete="off" placeholder="z. B. 3,99"><span aria-hidden="true">€</span></div></label></div><p class="field-error" role="status"></p><div class="result"><div><span class="result-label">PREIS PRO BLATT</span><strong class="result-number"></strong><span class="result-detail"></span></div><span class="difference"></span></div>`;
+      card.innerHTML = `<div class="offer-top"><span class="offer-badge"></span><button class="remove" aria-label="Angebot ${index + 1} entfernen" title="Angebot entfernen">×</button></div><label class="name-field">Name <span>(optional)</span><input class="offer-name" data-field="name" maxlength="80" aria-label="Name für Angebot ${index + 1} (optional)" placeholder="Angebot ${index + 1}"></label><div class="fields"><label>Rollen<input data-field="rolls" inputmode="numeric" type="text" maxlength="7" autocomplete="off" placeholder="z. B. 8"></label><span class="multiply" aria-hidden="true">×</span><label>Blatt je Rolle<input data-field="sheets" inputmode="numeric" type="text" maxlength="7" autocomplete="off" placeholder="z. B. 200"></label><label class="price-field">Packungspreis<div class="price-input"><input data-field="price" inputmode="decimal" type="text" maxlength="12" autocomplete="off" placeholder="z. B. 3,99"><span aria-hidden="true">€</span></div></label></div><p class="field-error" role="status"></p><div class="result"><div><span class="result-label">PREIS PRO BLATT</span><strong class="result-number"></strong><span class="result-detail"></span></div><span class="difference"></span></div><p class="reference-difference" hidden></p>`;
       card.querySelectorAll('[data-field]').forEach(input => {
         input.value = offer[input.dataset.field];
         input.addEventListener('input', () => { offer[input.dataset.field] = input.value; save(); update(); });
