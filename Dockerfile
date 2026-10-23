@@ -1,5 +1,5 @@
 FROM python:3.13-alpine
-ARG APP_VERSION=0.1.1
+ARG APP_VERSION=0.1.2
 LABEL org.opencontainers.image.title="Rollenpreis" \
       org.opencontainers.image.source="https://github.com/forke24x7/rollenpreis" \
       org.opencontainers.image.version="${APP_VERSION}" \
